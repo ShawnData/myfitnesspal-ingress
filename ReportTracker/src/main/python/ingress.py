@@ -31,4 +31,18 @@ class MyFitnessPal:
             totals_copy = deepcopy(totals)
             totals_copy.update({"Date": date})
             summary.append(totals_copy)
-        return DataFrame(summary)
+        df_summary = DataFrame(
+            summary,
+            columns=[
+                "Date",
+                "protein",
+                "fat",
+                "carbohydrates",
+                "sodium",
+                "sugar",
+                "calories",
+            ],
+        )
+        formated_columns = {str(col): str(col).title() for col in df_summary.columns}
+        df_summary = df_summary.rename(columns=formated_columns).fillna(0)
+        return df_summary

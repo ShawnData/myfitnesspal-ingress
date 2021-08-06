@@ -4,3 +4,4 @@ target/
 .python-version
 .coverage
 **/__pycache__
+.tox

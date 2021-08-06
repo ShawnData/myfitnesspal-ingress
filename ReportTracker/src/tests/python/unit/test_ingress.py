@@ -1,7 +1,7 @@
 from datetime import datetime
 import pytest
 import myfitnesspal as mfp
-from pandas import DataFrame
+from pandas import DataFrame, Timestamp
 from ingress import MyFitnessPal
 
 START_DATE = datetime(2021, 1, 1)
@@ -12,7 +12,7 @@ USER_NAME = "test_user"
 @pytest.fixture(name="mock_client")
 def get_mock_client(mocker):
     client = mocker.MagicMock(spec=mfp.Client)
-    mock_day = mocker.MagicMock(totals={"foo": "bar"})
+    mock_day = mocker.MagicMock(totals={"fat": 123})
     client.get_date.return_value = mock_day
     yield client
 
@@ -36,9 +36,14 @@ def test_get_nutrition_summary_dataframe(mock_myfitnesspal):
     assert isinstance(result, DataFrame)
     assert result.to_dict() == {
         "Date": {
-            0: datetime(2021, 1, 1),
-            1: datetime(2021, 1, 2),
-            2: datetime(2021, 1, 3),
+            0: Timestamp(2021, 1, 1),
+            1: Timestamp(2021, 1, 2),
+            2: Timestamp(2021, 1, 3),
         },
-        "foo": {0: "bar", 1: "bar", 2: "bar"},
+        "Calories": {0: 0, 1: 0, 2: 0},
+        "Carbohydrates": {0: 0, 1: 0, 2: 0},
+        "Fat": {0: 123, 1: 123, 2: 123},
+        "Protein": {0: 0, 1: 0, 2: 0},
+        "Sodium": {0: 0, 1: 0, 2: 0},
+        "Sugar": {0: 0, 1: 0, 2: 0},
     }
