@@ -1,4 +1,3 @@
-import sys
 from myfitnesspal import Client
 import xlwings as xw
 from pandas import to_datetime
