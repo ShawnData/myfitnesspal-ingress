@@ -1,3 +1,4 @@
+import sys
 from myfitnesspal import Client
 import xlwings as xw
 from pandas import to_datetime
@@ -13,14 +14,23 @@ END_DATE_LOC = "B6"
 client = Client("Shawnfit1987", password="@Baichidemima1")
 
 
+def get_inputs_from_sheet(active_sheet):
+    try:
+        return (
+            to_datetime(active_sheet.range(START_DATE_LOC).value),
+            to_datetime(active_sheet.range(END_DATE_LOC).value),
+            active_sheet.range(USER_NAME_LOC).value,
+        )
+    except Exception:
+        raise ValueError("Invalid input(s) or wrong input location(s).") from None
+
+
 def main():
     workbook = xw.Book.caller()
     active_sheet = workbook.sheets.active
     if active_sheet.name == "_xlwings.conf":
         raise RuntimeError("This is a protected sheet.")
-    start_date = to_datetime(active_sheet.range(START_DATE_LOC).value)
-    end_date = to_datetime(active_sheet.range(END_DATE_LOC).value)
-    user_name = active_sheet.range(USER_NAME_LOC).value
+    start_date, end_date, user_name = get_inputs_from_sheet(active_sheet)
     mfp = MyFitnessPal(
         client=client,
         start_date=start_date,
