@@ -11,7 +11,7 @@ START_DATE_LOC = "B5"
 END_DATE_LOC = "B6"
 
 
-client = Client("Shawnfit1987", password="@Baichidemima1")
+client = Client("", password="")
 
 
 def get_inputs_from_sheet(active_sheet):
