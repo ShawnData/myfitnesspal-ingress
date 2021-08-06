@@ -4,13 +4,25 @@ from pandas import to_datetime
 
 from src.main.python.ingress import MyFitnessPal
 
+MY_ACCOUNT_NAME_LOC = "B1"
+MY_ACCOUNT_PASSWORD_LOC = "B2"
+MY_ACCOUNT_SETTINGS_SHEET_NAME = "My Account Settings"
+
 OUTPUT_LOC = "A8"
 USER_NAME_LOC = "B3"
 START_DATE_LOC = "B5"
 END_DATE_LOC = "B6"
 
 
-client = Client("", password="")
+def get_my_account_client(workbook):
+    try:
+        sheet = workbook.sheets[MY_ACCOUNT_SETTINGS_SHEET_NAME]
+        return Client(
+            username=sheet.range(MY_ACCOUNT_NAME_LOC).value,
+            password=sheet.range(MY_ACCOUNT_PASSWORD_LOC).value,
+        )
+    except Exception:
+        raise ValueError("Invalid My Account Settings.") from None
 
 
 def get_inputs_from_sheet(active_sheet):
@@ -31,7 +43,7 @@ def main():
         raise RuntimeError("This is a protected sheet.")
     start_date, end_date, user_name = get_inputs_from_sheet(active_sheet)
     mfp = MyFitnessPal(
-        client=client,
+        client=get_my_account_client(workbook),
         start_date=start_date,
         end_date=end_date,
         user_name=user_name,
