@@ -27,7 +27,7 @@ class MyFitnessPal:
     def get_nutrition_summary_dataframe(self) -> DataFrame:
         summary = []
         for date in self.date_range:
-            totals = self.client.get_date(date, user_name=self.user_name).totals
+            totals = self.client.get_date(date, username=self.user_name).totals
             totals_copy = deepcopy(totals)
             totals_copy.update({"Date": date})
             summary.append(totals_copy)
