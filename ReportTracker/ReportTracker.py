@@ -1,3 +1,4 @@
+from time import sleep
 from myfitnesspal import Client
 import xlwings as xw
 from pandas import to_datetime
@@ -42,6 +43,7 @@ def main():
     if active_sheet.name == "_xlwings.conf":
         raise RuntimeError("This is a protected sheet.")
     start_date, end_date, user_name = get_inputs_from_sheet(active_sheet)
+    print(f"Start fetching data for {user_name} between {start_date} and {end_date}...")
     mfp = MyFitnessPal(
         client=get_my_account_client(workbook),
         start_date=start_date,
@@ -51,7 +53,8 @@ def main():
     active_sheet.range(OUTPUT_LOC).options(
         index=False, dtype=None
     ).value = mfp.get_nutrition_summary_dataframe()
-
+    print("Success!")
+    sleep(1)
 
 if __name__ == "__main__":
     xw.Book("ReportTracker.xlsm").set_mock_caller()
